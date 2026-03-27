@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>☥ᬼDEV-PAVILLON𓆘P-D-F☥ᬼ</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Share+Tech+Mono&display=swap');
+
+    :root {
+        --primary: #ff0000;
+        --secondary: #00ff00;
+        --bg: #000000;
+        --dark-red: #4a0000;
+        --glass: rgba(10, 10, 10, 0.95);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background-color: var(--bg);
+        color:white;
+        font-family: 'Share Tech Mono', monospace;
+        overflow-x:hidden;
+        height:100vh;
+    }
+
+    /* --- FOND ANIMÉ MATRIX --- */
+    #bg-canvas {
+        position: fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        z-index:-1;
+        opacity:0.3;
+    }
+
+    /* --- ECRAN DE CONNEXION --- */
+    #login-screen {
+        position: fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:black;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        z-index:9999;
+        transition:1s;
+    }
+
+    .glitch-gate {
+        font-family:'Nosifer', cursive;
+        font-size:3rem;
+        color:var(--primary);
+        text-shadow:0 0 20px red;
+        margin-bottom:20px;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0%{transform:scale(1); opacity:1;}
+        50%{transform:scale(1.05); opacity:0.7;}
+        100%{transform:scale(1); opacity:1;}
+    }
+
+    .pass-input {
+        background:transparent;
+        border:1px solid var(--primary);
+        color:white;
+        padding:15px;
+        text-align:center;
+        font-size:1.2rem;
+        width:300px;
+        outline:none;
+        box-shadow:0 0 15px var(--dark-red);
+    }
+
+    /* --- INTERFACE PRINCIPALE --- */
+    #main-content { display:none; padding:20px; }
+
+    header {
+        text-align:center;
+        padding:40px;
+        border-bottom:2px solid var(--primary);
+        background: linear-gradient(to bottom, #1a0000, black);
+    }
+
+    .title-anim {
+        font-family:'Nosifer', cursive;
+        font-size:5rem;
+        color:white;
+        letter-spacing:15px;
+        position:relative;
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+        0%,100%{transform:translateY(0) rotate(0); text-shadow:0 0 20px red;}
+        50%{transform:translateY(-15px) rotate(1deg); text-shadow:0 0 50px red;}
+    }
+
+    .description {
+        color:#888;
+        font-style:italic;
+        margin-top:10px;
+        letter-spacing:2px;
+    }
+
+    .target-box {
+        background:var(--glass);
+        border:1px solid #333;
+        padding:30px;
+        margin:20px auto;
+        max-width:800px;
+        text-align:center;
+        border-radius:10px;
+        position:relative;
+        overflow:hidden;
+    }
+
+    .target-box::before {
+        content:""; position:absolute; top:0; left:-100%; width:100%; height:2px;
+        background:var(--primary); animation: scan 3s linear infinite;
+    }
+
+    @keyframes scan{0%{left:-100%;}100%{left:100%;}}
+
+    .num-input {
+        width:100%;
+        background:#050505;
+        border:1px solid var(--primary);
+        color:var(--secondary);
+        font-size:2rem;
+        padding:15px;
+        text-align:center;
+        font-family:'Share Tech Mono';
+    }
+
+    .grid-container {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:20px;
+        max-width:1200px;
+        margin:0 auto;
+    }
+
+    .section-box {
+        background:var(--glass);
+        border:1px solid #222;
+        padding:20px;
+        border-radius:5px;
+    }
+
+    .section-title {
+        color:var(--primary);
+        font-size:1.5rem;
+        margin-bottom:20px;
+        text-align:center;
+        border-bottom:1px solid var(--dark-red);
+        padding-bottom:10px;
+    }
+
+    .btn-list {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .ban-btn, .unban-btn {
+        padding:15px;
+        border:1px solid #444;
+        background:#000;
+        color:white;
+        cursor:pointer;
+        font-weight:bold;
+        transition:0.3s;
+        position:relative;
+        overflow:hidden;
+    }
+
+    .ban-btn:hover{ background:var(--primary); color:black; transform:scale(1.05);}
+    .unban-btn:hover{ background:var(--secondary); color:black; transform:scale(1.05);}
+
+    #modal {
+        display:none;
+        position:fixed;
+        top:50%; left:50%;
+        transform:translate(-50%, -50%);
+        background:#0a0a0a;
+        border:2px solid var(--primary);
+        padding:30px;
+        width:80%;
+        z-index:1000;
+        box-shadow:0 0 100px black;
+    }
+
+    textarea {
+        width:100%; height:250px;
+        background:black; color:#00ff00;
+        border:1px solid #333; padding:10px;
+        font-family:'Share Tech Mono'; font-size:1rem;
+    }
+
+    .guide-box {
+        margin-top:50px;
+        text-align:center;
+    }
+
+    .hidden{ display:none; }
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+    <div class="glitch-gate">ACCESS DENIED</div>
+    <input type="password" id="entryPass" class="pass-input" placeholder="MOT DE PASSE..." oninput="checkLogin()">
+    <p style="margin-top:20px; color:#444;">ENTER THE PAVILLON</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+    <header>
+        <div class="title-anim">DEV-PAVILLON</div>
+        <div class="description">"Le pavillon observe, juge et purifie."</div>
+    </header>
+
+    <div class="target-box">
+        <label style="color:red; display:block; margin-bottom:10px;">IDENTIFICATION DE LA CIBLE</label>
+        <input type="text" id="targetNum" class="num-input" placeholder="+33 7 00 00 00 00">
+    </div>
+
+    <div class="grid-container">
+        <div class="section-box">
+            <div class="section-title">☢️ PROTOCOLES DE PURGE</div>
+            <div class="btn-list" id="banGrid"></div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">🛡️ RÉSURRECTION</div>
+            <div class="btn-list" id="unbanGrid"></div>
+        </div>
+    </div>
+
+    <div class="guide-box">
+        <button class="ban-btn" onclick="openGuide()">ACCÉDER AU GUIDE
